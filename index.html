@@ -30,7 +30,7 @@ async function openArchive(password){
   const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:bytes(salt),iterations:210000,hash:"SHA-256"},material,{name:"AES-GCM",length:256},false,["decrypt"]);
   const plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:bytes(iv)},key,bytes(payload));
   sessionStorage.setItem("celicat_access",password);
-  document.open();document.write(new TextDecoder().decode(plain));document.close();
+  const html=new TextDecoder().decode(plain);document.open();document.write(html.replace('</body>','<script src="enhance.js"></'+'script></body>'));document.close();
 }
 const form=document.getElementById("login"),error=document.getElementById("error"),saved=sessionStorage.getItem("celicat_access");
 if(saved)openArchive(saved).catch(()=>sessionStorage.removeItem("celicat_access"));
